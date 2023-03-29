@@ -9,34 +9,28 @@ class Url
   include Comparable
   def initialize(url)
     @uri = URI(url)
+    query_string = @uri.query || ''
+    query_array = query_string.split('&');
+    result = {}
+    query_array.each do |item|
+	  pairarr = item.split('=');
+	  result[pairarr[0].to_sym] = pairarr[1]
+    end
+    @result = result
   end
 
   def query_params()
-    query_string = @uri.query || ''
-    query_array = query_string.split('&');
-    result = {}
-    query_array.each do |item|
-	  pairarr = item.split('=');
-	  result[pairarr[0].to_sym] = pairarr[1]
-    end
-    result
+    @result
   end
   
   def query_param(*args)
-    query_string = @uri.query || ''
-    query_array = query_string.split('&');
-    result = {}
-    query_array.each do |item|
-	  pairarr = item.split('=');
-	  result[pairarr[0].to_sym] = pairarr[1]
-    end
     if(args.length == 0)
-	  result
+	  @result
 	elsif(args.length == 1)
-	  result[args[0]]
+	  @result[args[0]]
 	elsif(args.length == 2)
-	  if(result.key? args[0])
-	    result[args[0]]
+	  if(@result.key? args[0])
+	    @result[args[0]]
 	  else
 		args[1]
 	  end
